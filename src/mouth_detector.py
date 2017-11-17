@@ -1,5 +1,8 @@
+#!/usr/bin/env python
 import cv2
 import numpy as np
+import rospy
+from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 
 class MouthDetector:
@@ -10,17 +13,19 @@ class MouthDetector:
 
         if self.mouth_cascade.empty():
             raise IOError('Unable to load the mouth cascade classifier xml file')
-        rospy.init_node('mouth_detector')
+
+        self.bridge = CvBridge()
+        self.frame = None
+        rospy.Subscriber("/usb_cam/image_raw", Image, self.callback)
 
 
-        rospy.Subscriber("/usb_cam/image_raw", Image, self.imageReceived)
+    def callback(self, image):
+        try:
+            self.frame = self.bridge.imgmsg_to_cv2(image, "bgr8")
+        except CvBridgeError as e:
+            print(e)
 
-
-    def imageReceived(self, image):
-        self.frame = image
-
-    def run(self):
-        self.frame = cv2.resize(self.frame, None, fx=ds_factor, fy=ds_factor, interpolation=cv2.INTER_AREA)
+        self.frame = cv2.resize(self.frame, None, fx=self.ds_factor, fy=self.ds_factor, interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
         mouth_rects = self.mouth_cascade.detectMultiScale(gray, 1.7, 11)
@@ -30,12 +35,10 @@ class MouthDetector:
             break
 
         cv2.imshow('Mouth Detector', self.frame)
+        cv2.waitKey(1)
 
-        c = cv2.waitKey(1)
-        if c == 27:
-            break
-        rospy.spin()
 
 if __name__ == '__main__':
     node = MouthDetector()
-    node.run()
+    rospy.init_node('mouth_detector')
+    rospy.spin()
