@@ -5,14 +5,14 @@ import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 
-class FaceDetector:
+class MouthDetector:
 
     def __init__(self):
-        self.face_cascade= cv2.CascadeClassifier('./src/haarcascade_frontalface_default.xml')
+        self.mouth_cascade = cv2.CascadeClassifier('./haarcascade_mcs_mouth.xml')
         self.ds_factor = 0.5
 
-        if self.face_cascade.empty():
-            raise IOError('Unable to load the face cascade classifier xml file')
+        if self.mouth_cascade.empty():
+            raise IOError('Unable to load the mouth cascade classifier xml file')
 
         self.bridge = CvBridge()
         self.frame = None
@@ -28,16 +28,17 @@ class FaceDetector:
         self.frame = cv2.resize(self.frame, None, fx=self.ds_factor, fy=self.ds_factor, interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
-        face_rects = self.face_cascade.detectMultiScale(gray, 1.3, 5)
-        for (x,y,w,h) in face_rects:
+        mouth_rects = self.mouth_cascade.detectMultiScale(gray, 1.7, 11)
+        for (x,y,w,h) in mouth_rects:
+            y = int(y - 0.15*h)
             cv2.rectangle(self.frame, (x,y), (x+w,y+h), (0,255,0), 3)
             break
 
-        cv2.imshow('Face Detector', self.frame)
+        cv2.imshow('Mouth Detector', self.frame)
         cv2.waitKey(1)
 
 
 if __name__ == '__main__':
-    node = FaceDetector()
-    rospy.init_node('face_detector')
+    node = MouthDetector()
+    rospy.init_node('mouth_detector')
     rospy.spin()
