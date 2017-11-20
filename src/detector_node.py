@@ -2,6 +2,7 @@
 import cv2
 import numpy as np
 import rospy
+import detector
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 
@@ -16,6 +17,7 @@ class Node:
 
         self.bridge = CvBridge()
         self.frame = None
+        self.detector = detector.Detection()
 
 
         rospy.Subscriber("/usb_cam/image_raw", Image, self.callback)
@@ -25,10 +27,12 @@ class Node:
             self.frame = self.bridge.imgmsg_to_cv2(image, "bgr8")
         except CvBridgeError as e:
             print(e)
+        
+        self.detector.findFace(self.frame)
+        
+        if self.detector.faceIsFound():
+            cv2.rectangle(self.frame, self.detector.
 
-        self.frame = cv2.resize(self.frame, None, fx=self.ds_factor, fy=self.ds_factor, interpolation=cv2.INTER_AREA)
-
-        gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
         face_rects = self.face_cascade.detectMultiScale(gray, 1.3, 10)
         for (x,y,w,h) in face_rects:
