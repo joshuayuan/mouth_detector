@@ -8,7 +8,7 @@ from sensor_msgs.msg import Image
 class MouthDetector:
 
     def __init__(self):
-        self.mouth_cascade = cv2.CascadeClassifier('./haarcascade_mcs_mouth.xml')
+        self.mouth_cascade = cv2.CascadeClassifier('haarcascade_mcs_mouth.xml')
         self.ds_factor = 0.5
 
         if self.mouth_cascade.empty():

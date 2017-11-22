@@ -9,15 +9,12 @@ from sensor_msgs.msg import Image
 class Node:
 
     def __init__(self):
-        self.face_cascade= cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
-        self.ds_factor = 0.5
-
-        if self.face_cascade.empty():
-            raise IOError('Unable to load the face cascade classifier xml file')
-
         self.bridge = CvBridge()
-        self.frame = None
-        self.detector = detector.Detection()
+        self.detector = detector.Detector()
+        print("PLEASE")
+        self.detector.loadCascade('haarcascade_frontalface_default.xml')
+        if self.detector.hasEmptyCascade():
+            raise IOError('Unable to load the face cascade classifier xml file')
 
 
         rospy.Subscriber("/usb_cam/image_raw", Image, self.callback)
@@ -27,17 +24,11 @@ class Node:
             self.frame = self.bridge.imgmsg_to_cv2(image, "bgr8")
         except CvBridgeError as e:
             print(e)
-        
-        self.detector.findFace(self.frame)
-        
+        self.detector.loadFrameFindFace(self.frame)
         if self.detector.faceIsFound():
-            cv2.rectangle(self.frame, self.detector.
-
-
-        face_rects = self.face_cascade.detectMultiScale(gray, 1.3, 10)
-        for (x,y,w,h) in face_rects:
-            cv2.rectangle(self.frame, (x,y), (x+w,y+h), (0,255,0), 3)
-            break
+            x1, y1, x2, y2 = self.detector.getFaceBox()
+            print(x1, y1, x2, y2)
+            cv2.rectangle(self.frame, (x1, y1), (x2, t2), (0, 255, 0), 2)
 
         cv2.imshow('Face Detector', self.frame)
         cv2.waitKey(1)

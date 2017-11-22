@@ -25,7 +25,7 @@ class FaceDetector:
         except CvBridgeError as e:
             print(e)
 
-        #self.frame = cv2.resize(self.frame, None, fx=self.ds_factor, fy=self.ds_factor, interpolation=cv2.INTER_AREA)
+        self.frame = cv2.resize(self.frame, None, fx=self.ds_factor, fy=self.ds_factor, interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 
         face_rects = self.face_cascade.detectMultiScale(gray, 1.2, 10)
