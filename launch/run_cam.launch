@@ -14,6 +14,6 @@
     <param name="camera_frame_id" value="usb_cam" />
     <param name="io_method" value="mmap" />
   </node>
-  <node name="detector_node" pkg="mouth_detector" type="detector_node.py" required="true">
+  <node name="detector_node" pkg="mouth_detector" type="detector_node.py" required="true" output="screen">
   </node>
 </launch>
