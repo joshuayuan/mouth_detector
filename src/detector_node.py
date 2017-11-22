@@ -12,10 +12,12 @@ class Node:
         self.bridge = CvBridge()
         self.detector = detector.Detector()
         print("PLEASE")
-        self.detector.loadCascade('/home/cc/ee106a/fa17/class/ee106a-aec/marshmello/src/mouth-detector/src/haarcascade_frontalface_default.xml')
+        #  f = open(path)
+        #  print f
+        #  return
+        self.detector.loadCascade('/home/brent/catkin_ws/src/mouth_detector/src/haarcascade_frontalface_default.xml')
         if self.detector.hasEmptyCascade():
             raise IOError('Unable to load the face cascade classifier xml file')
-
 
         rospy.Subscriber("/usb_cam/image_raw", Image, self.callback)
 
@@ -28,7 +30,7 @@ class Node:
         if self.detector.faceIsFound():
             x1, y1, x2, y2 = self.detector.getFaceBox()
             print(x1, y1, x2, y2)
-            cv2.rectangle(self.frame, (x1, y1), (x2, t2), (0, 255, 0), 2)
+            cv2.rectangle(self.frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
 
         cv2.imshow('Face Detector', self.frame)
         cv2.waitKey(1)
