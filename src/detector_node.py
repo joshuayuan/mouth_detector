@@ -12,7 +12,7 @@ class Node:
         self.bridge = CvBridge()
         self.detector = detector.Detector()
         print("PLEASE")
-        self.detector.loadCascade('haarcascade_frontalface_default.xml')
+        self.detector.loadCascade('/home/cc/ee106a/fa17/class/ee106a-aec/marshmello/src/mouth-detector/src/haarcascade_frontalface_default.xml')
         if self.detector.hasEmptyCascade():
             raise IOError('Unable to load the face cascade classifier xml file')
 
