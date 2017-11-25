@@ -15,5 +15,6 @@
     <param name="io_method" value="mmap" />
   </node>
   <node name="detector_node" pkg="mouth_detector" type="detector_node.py" required="true" output="screen">
+    <param name="cascade_path" textfile="$(find mouth_detector)/src/haar_frontalface_default.xml">
   </node>
 </launch>
