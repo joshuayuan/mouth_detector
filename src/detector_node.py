@@ -21,6 +21,7 @@ class Node:
 
         self.basic_cascade = cv2.CascadeClassifier(path)
         self.basic_frame = None
+        self.previous_coords = ((0, 0),(1, 1)) # (x, y) of top left
 
     def callback(self, image):
         try:
@@ -39,6 +40,12 @@ class Node:
         if self.detector.faceIsFound():
             x1, y1, x2, y2 = self.detector.getFaceBox()
             print(x1, y1, x2, y2)
+            if abs(x1-self.prev_coords[0][0]) > self.frame.shape[0] / 4 or abs(y1-self.prev_coords[0][1]) > self.frame.shape[1]:
+                x1, y1 = self.prev_coords[0]
+                x2, y2 = self.prev_coords[1]
+            else:
+                self.prev_coords[0] = (x1, y1)
+                self.prev_coords[1] = (x2, y2)
             cv2.rectangle(self.frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
 
         cv2.imshow('Face Detector', self.frame)
