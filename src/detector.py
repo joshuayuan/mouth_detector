@@ -11,11 +11,21 @@ class Detector:
             self.y = y # int
     class Rectangle:
         def __init__(self, top_left=None, width=0, height=0):
+<<<<<<< HEAD
+=======
+            if top_left == None:
+                top_left = Detector.Point()
+
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
             self.top_left = top_left # Point()
             self.width = width # int
             self.height = height # int
     class Timer:
+<<<<<<< HEAD
         def __init(self):
+=======
+        def __init__(self):
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
             self.start = 0
             self.runnig = False
 
@@ -36,9 +46,16 @@ class Detector:
 
     def loadCascade(self, path):
         self.face_cascade = cv2.CascadeClassifier(path)
+<<<<<<< HEAD
         print(self.face_cascade.load(path))
         print(self.face_cascade)
         print(path)
+=======
+        # print(self.face_cascade.load(path))
+        print(self.face_cascade)
+        print(path)
+        time.sleep(1)
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
 
     def hasEmptyCascade(self):
         return self.face_cascade.empty()
@@ -50,15 +67,25 @@ class Detector:
             print(self.frame)
             self.i = 2
 
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         self.frame = cv2.resize(self.frame, None, fx=self.SCALE_FACTOR, fy=self.SCALE_FACTOR, interpolation=cv2.INTER_AREA)
         self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         if not self.found_face:
             self.detect_all_faces(self.frame)
         else:
+<<<<<<< HEAD
             self.detect_face_in_roi(self.frame)
             if self.timer.running:
                 self.detect_face_with_template_matching(self.frame)
+=======
+            self.detect_faces_around_roi(self.frame)
+            if self.timer.running:
+                self.detect_faces_with_template_matching(self.frame)
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         return self.face_pos
     
     def double_this_rectangle(self, input_rectangle, frame_size):
@@ -80,7 +107,11 @@ class Detector:
             new_rect.top_left.x = frame_size[0] - new_rect.width + 1
         if new_rect.height + new_rect.top_left.y > frame_size[1]:
             new_rect.top_left.y = frame_size[1] - new_rect.height + 1
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         return new_rect
 
     def find_biggest_face(self, faces):
@@ -122,8 +153,13 @@ class Detector:
                      new_face_rect.top_left.y:new_face_rect.top_left.y + new_face_rect.height]
 
     def detect_all_faces(self, frame):
+<<<<<<< HEAD
         self.faces = self.face_cascade.detectMultiScale(self.frame, 1.5, 10) #Add min & max sizing later
         if not self.faces:
+=======
+        self.faces = self.face_cascade.detectMultiScale(self.frame, 1.1, 5) #Add min & max sizing later
+        if len(self.faces):
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
             print("no faces")
             return
 
@@ -135,19 +171,32 @@ class Detector:
         self.face_pos = self.get_rectangle_center(self, self.face)
 
     def detect_faces_around_roi(self, frame):
+<<<<<<< HEAD
         self.faces = self.face_cascade.detectMultiScale(self.frame, 1.1, 3) #min and max should be +/- 20%
         if not self.faces:
+=======
+        self.faces = self.face_cascade.detectMultiScale(self.frame, 1.1, 5) #min and max should be +/- 20%
+        if len(self.faces) == 0:
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
             self.timer.running = True
             if self.timer.start == 0:
                 self.timer.start = time.time()
             return
         self.timer.running = False
+<<<<<<< HEAD
         self.timestamp.start = 0
+=======
+        self.timer.start = 0
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         
         self.face = self.find_biggest_face(self.faces)
 
         self.face_template = self.get_face_template(self.frame, self.face)
+<<<<<<< HEAD
         self.face_roi = self.double_rectangle(self.face, self.frame.shape)
+=======
+        self.face_roi = self.double_this_rectangle(self.face, self.frame.shape)
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         self.face_pos = self.get_rectangle_center(self.face)
 
     def detect_faces_with_template_matching(self, frame):
@@ -158,24 +207,40 @@ class Detector:
             self.face_pos = self.Point()
             self.face = self.Rectangle()
             return
+<<<<<<< HEAD
         self.match_result = cv2.matchTemplate(frame, self.face_template, cv2.CV_TM_SQDIFF_NORMED)
         cv2.normalize(self.match_result, match_result, 0, 1, cv2.NORM_MINMAX)
+=======
+        self.match_result = cv2.matchTemplate(frame, self.face_template, cv2.TM_SQDIFF_NORMED)
+        cv2.normalize(self.match_result, self.match_result, 0, 1, cv2.NORM_MINMAX)
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(self.match_result)
         top_left = max_loc
         bottom_right = (top_left[0] + self.face_template.shape[0], top_left[1] + self.face_template.shape[1])
         
         self.face = self.Rectangle(self.Point(min_loc[0], min_loc[1]), self.face_template.shape[0], self.face_template.shape[1])
+<<<<<<< HEAD
         self.face = self.double_rectangle(self.face, self.frame.shape)
 
         self.face_template = self.get_face_template(self.frame, self.face)
         self.face_roi = self.double_rectangle(self.face, self.frame.shape)
+=======
+        self.face = self.double_this_rectangle(self.face, self.frame.shape)
+
+        self.face_template = self.get_face_template(self.frame, self.face)
+        self.face_roi = self.double_this_rectangle(self.face, self.frame.shape)
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
         self.face_pos = self.get_rectangle_center(self.face)
     def faceIsFound(self):
         return self.found_face
     def getFacePosition(self):
         return self.face_pos
     def getFaceBox(self):
+<<<<<<< HEAD
         return (self.face.top_left.x, self.face.top_left.y, self.face.top_left.x + self.face.width, self.face.top_left.y + self.face.height)
+=======
+        return [int(x / self.SCALE_FACTOR) for x in (self.face.top_left.x, self.face.top_left.y, self.face.top_left.x + self.face.width, self.face.top_left.y + self.face.height)]
+>>>>>>> edbd127b8a02a424e5b2e4d20a488e92b5e1482f
 
 
 
