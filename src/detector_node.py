@@ -50,14 +50,14 @@ class Node:
             px2, py2 = self.prev_coords[1]
             print("-", x1, y1, x2, y2)
             print("P", px1, py1, px2, py2)
-            if self.loaded and ( abs(x1-px1) > self.frame.shape[0] / 5 or abs(y1-py1) / 5 > self.frame.shape[1]):
+            if self.loaded and ( abs(x1-px1) > self.frame.shape[0] / 8 or abs(y1-py1) / 8 > self.frame.shape[1]):
                 x1, y1 = self.prev_coords[0]
                 x2, y2 = self.prev_coords[1]
             elif self.loaded:
                 self.prev_coords[0] = (x1, y1)
                 self.prev_coords[1] = (x2, y2)
             if self.loaded and ((x2-x1)/2 > (px2-px1) or (y2-y1)/2 > (py2-py1) or (x2-x1)*2 < (px2-px1) or (y2-y1)*2 < (py2-py1)):
-                print((x2-x1)/2 > (px2-px1) or (y2-y1)/2 > (py2-py1) or (x2-x1)*2 < (px2-px1) or (y2-y1)*2 < (py2-py1))
+                #print((x2-x1)/2 > (px2-px1) or (y2-y1)/2 > (py2-py1) or (x2-x1)*2 < (px2-px1) or (y2-y1)*2 < (py2-py1))
                 cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 255, 0), 4)
                 x1, y1 = self.prev_coords[0]
                 x2, y2 = self.prev_coords[1]
@@ -65,11 +65,14 @@ class Node:
                 self.prev_coords[0] = (x1, y1)
                 self.prev_coords[1] = (x2, y2)
             cv2.rectangle(self.frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
+            cv2.circle(self.frame, ((x1+x2)/2, y1/5+4*y2/5), (x2-x1)/6, (0, 0, 255), 2)
 
         cv2.imshow('Face Detector', self.frame)
         key = cv2.waitKey(1)
         if key == ord('l'):
             self.loaded = True
+        elif key == ord('u'):
+            self.loaded = False
         elif key == ord('q'):
             rospy.signal_shutdown("q was pressed")
 

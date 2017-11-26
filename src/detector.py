@@ -176,3 +176,6 @@ class Detector:
         return self.face_pos
     def getFaceBox(self):
         return [int(x / self.SCALE_FACTOR) for x in (self.face.top_left.x, self.face.top_left.y, self.face.top_left.x + self.face.width, self.face.top_left.y + self.face.height)]
+
+    def getMouthPos(self):
+        return (self.face_pos.x, self.face_pos.y + self.face.height * 4/5)
