@@ -56,6 +56,14 @@ class DetectorNode:
                 self.prev_coords[1] = (x2, y2)
             cv2.rectangle(self.frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
             cv2.circle(self.frame, ((x1+x2)/2, y1/5+4*y2/5), (x2-x1)/6, (0, 0, 255), 2)
+            mouth_x, mouth_y = ((x1+x2)/2, y1/5+4*y2/5)
+
+            cloud_out = pc2.read_points(point_cloud, ("x", "y", "z"), True, [(mouth_x, mouth_y)])
+            try:
+                mouth_x, mouth_y, mouth_z = next(cloud_out)
+            except Exception:
+                mouth_x = mouth_y = mouth_z = None
+            self.transform_broadcast(mouth_x, mouth_y, mouth_z, image.header.stamp)
 
         cv2.imshow('Face Detector', self.frame)
         key = cv2.waitKey(1)
