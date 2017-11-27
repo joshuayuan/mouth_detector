@@ -25,8 +25,7 @@ class DetectorNode:
         if self.detector.hasEmptyCascade():
             raise IOError('Unable to load the face cascade classifier xml file')
         #the following line is only for testing
-        rospy.Subscriber("/usb_cam/image_raw", Image, self.callback)
-        image_sub = message_filters.Subscriber("/usb_cam/image_raw", Image) # Change to /kinect2/qhd/image_color_rect
+        image_sub = message_filters.Subscriber("/kinect2/qhd/image_color_rect", Image) # Change to /kinect2/qhd/image_color_rect
         point_cloud_sub = message_filters.Subscriber("/kinect2/qhd/points", PointCloud2)
 
         synch_sub = message_filters.TimeSynchronizer([image_sub, point_cloud_sub], 10)
