@@ -63,7 +63,8 @@ class DetectorNode:
                 mouth_x, mouth_y, mouth_z = next(cloud_out)
             except Exception:
                 mouth_x = mouth_y = mouth_z = None
-            self.transform_broadcast(mouth_x, mouth_y, mouth_z, image.header.stamp)
+            if mouth_x:
+                self.transform_broadcast(mouth_x, mouth_y, mouth_z, image.header.stamp, image.header.frame_id)
 
         cv2.imshow('Face Detector', self.frame)
         key = cv2.waitKey(1)
@@ -73,9 +74,9 @@ class DetectorNode:
             self.loaded = False
         elif key == ord('q'):
             rospy.signal_shutdown("q was pressed")
-    
-    def transform_broadcast(self, x, y, z, timestamp):
-        self.broadcaster.sendTransform((x, y, z), tf.transformations.quaternion_from_euler(0, 0, 0), timestamp, "face", "kinect")
+
+    def transform_broadcast(self, x, y, z, timestamp, source_frame):
+        self.broadcaster.sendTransform((x, y, z), tf.transformations.quaternion_from_euler(0, 0, 0), timestamp, "face", source_frame)
 
 
 if __name__ == '__main__':
