@@ -19,7 +19,6 @@ class DetectorNode:
 
         rospack = rospkg.RosPack()
         cascade_path = rospack.get_path('mouth_detector')+"/src/haarcascade_frontalface_default.xml"
-        print(cascade_path)
         self.detector.loadCascade(cascade_path)
         if self.detector.hasEmptyCascade():
             raise IOError('Unable to load the face cascade classifier xml file')
