@@ -17,7 +17,13 @@ def move_robot(request):
     message = "son, it works!"
     return TriggerPhaseResponse(success, message)
 
-
+def listen():
+    listener = tf.TransformListener()
+    try:
+        x, y, z = listener.lookupTransform("base", "face", rospy.Time(0))
+        print("("+str(x)+", " + str(y) + ", " + str(z) + ")")
+    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        continue
 
 if __name__ == '__main__':
     billy_server()
