@@ -31,7 +31,7 @@ class DetectorNode:
         synch_sub.registerCallback(self.callback)
 
         self.prev_coords = [(0, 0),(1, 1)] # (x, y) of top left
-        self.loaded = False
+        self.loaded = True
         self.debug = False
 
     def callback(self, image, point_cloud=None):
