@@ -20,8 +20,10 @@ def move_robot(request):
 def listen():
     listener = tf.TransformListener()
     try:
-        x, y, z = listener.lookupTransform("base", "face", rospy.Time(0))
-        print("("+str(x)+", " + str(y) + ", " + str(z) + ")")
+        (translation, rotation) = listener.lookupTransform("base", "face", rospy.Time(0))
+        x, y, z = translation
+        print("translation: ("+str(x)+", " + str(y) + ", " + str(z) + ")")
+        print("rotation: " + str(rotation))
     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
         continue
 
