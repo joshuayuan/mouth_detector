@@ -28,7 +28,10 @@ class Node:
             self.frame = self.bridge.imgmsg_to_cv2(image, "bgr8")
         except CvBridgeError as e:
             print(e)
-        self.detector.loadFrameFindFace(self.frame)
+        try:
+            self.detector.loadFrameFindFace(self.frame)
+        except:
+            pass
 
         self.basic_frame = cv2.resize(self.basic_frame, None, fx=self.SCALE_FACTOR, fy=self.SCALE_FACTOR, interpolation=cv2.INTER_AREA)
         self.basic_frame = cv2.cvtColor(self.basic_frame, cv2.COLOR_BGR2GRAY)
