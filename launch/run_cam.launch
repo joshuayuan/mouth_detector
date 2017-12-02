@@ -10,11 +10,11 @@
     <!-- <param name="image_width" value="640" /> -->
     <!-- <param name="image_height" value="472" /> -->
 
+    <param name="pixel_format" value="mjpeg" />
     <param name="pixel_format" value="yuyv" />
     <param name="camera_frame_id" value="usb_cam" />
     <param name="io_method" value="mmap" />
   </node>
   <node name="detector_node" pkg="mouth_detector" type="detector_node.py" required="true" output="screen">
-    <param name="cascade_path" textfile="$(find mouth_detector)/src/haar_frontalface_default.xml">
   </node>
 </launch>

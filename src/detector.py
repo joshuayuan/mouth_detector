@@ -39,10 +39,8 @@ class Detector:
 
     def loadCascade(self, path):
         self.face_cascade = cv2.CascadeClassifier(path)
-        # print(self.face_cascade.load(path))
         print(self.face_cascade)
         print(path)
-        time.sleep(1)
 
     def hasEmptyCascade(self):
         return self.face_cascade.empty()
@@ -53,7 +51,6 @@ class Detector:
             print(self.frame.shape)
             print(self.frame)
             self.i = 2
-
 
         self.frame = cv2.resize(self.frame, None, fx=self.SCALE_FACTOR, fy=self.SCALE_FACTOR, interpolation=cv2.INTER_AREA)
         self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
@@ -84,7 +81,6 @@ class Detector:
             new_rect.top_left.x = frame_size[0] - new_rect.width + 1
         if new_rect.height + new_rect.top_left.y > frame_size[1]:
             new_rect.top_left.y = frame_size[1] - new_rect.height + 1
-
         return new_rect
 
     def find_biggest_face(self, faces):
@@ -127,7 +123,7 @@ class Detector:
 
     def detect_all_faces(self, frame):
         self.faces = self.face_cascade.detectMultiScale(self.frame, 1.1, 5) #Add min & max sizing later
-        if len(self.faces):
+        if not len(self.faces):
             print("no faces")
             return
 
@@ -136,7 +132,7 @@ class Detector:
         self.face = self.find_biggest_face(self.faces)
         self.face_template = self.get_face_template(self.frame, self.face)
         self.face_roi = self.double_this_rectangle(self.face, self.frame.shape)
-        self.face_pos = self.get_rectangle_center(self, self.face)
+        self.face_pos = self.get_rectangle_center(self.face)
 
     def detect_faces_around_roi(self, frame):
         self.faces = self.face_cascade.detectMultiScale(self.frame, 1.1, 5) #min and max should be +/- 20%
@@ -181,8 +177,5 @@ class Detector:
     def getFaceBox(self):
         return [int(x / self.SCALE_FACTOR) for x in (self.face.top_left.x, self.face.top_left.y, self.face.top_left.x + self.face.width, self.face.top_left.y + self.face.height)]
 
-
-
-
-
-
+    def getMouthPos(self):
+        return (self.face_pos.x, self.face_pos.y + self.face.height * 4/5)
