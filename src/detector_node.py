@@ -31,7 +31,7 @@ class DetectorNode:
         synch_sub.registerCallback(self.callback)
 
         self.prev_coords = [(0, 0),(1, 1)] # (x, y) of top left
-        self.loaded = True
+        self.loaded = False
         self.debug = False
 
     def callback(self, image, point_cloud=None):
@@ -44,15 +44,8 @@ class DetectorNode:
         except:
             pass
 
-        self.basic_frame = cv2.resize(self.basic_frame, None, fx=self.SCALE_FACTOR, fy=self.SCALE_FACTOR, interpolation=cv2.INTER_AREA)
-        self.basic_frame = cv2.cvtColor(self.basic_frame, cv2.COLOR_BGR2GRAY)
-        basic_faces = self.basic_cascade.detectMultiScale(self.basic_frame, 1.2, 3)
-        if len(basic_faces) != 0:
-            x1, y1, x2, y2 = basic_faces[0]
-            cv2.rectangle(self.frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
-
-        self.detector.loadFrameFindFace(self.frame)
         if self.detector.faceIsFound():
+            print("face is found")
             x1, y1, x2, y2 = self.detector.getFaceBox()
             px1, py1 = self.prev_coords[0]
             px2, py2 = self.prev_coords[1]
@@ -64,6 +57,7 @@ class DetectorNode:
                 x1, y1 = self.prev_coords[0]
                 x2, y2 = self.prev_coords[1]
             else:
+                self.loaded = True
                 self.prev_coords[0] = (x1, y1)
                 self.prev_coords[1] = (x2, y2)
             cv2.rectangle(self.frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
