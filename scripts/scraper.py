@@ -5,7 +5,6 @@ import rospy
 from mouth_detector.srv import TriggerPhase
 
 brent_site = "https://brentyi.com/marshmallow/phase"
-most_recent_phase = 0
 
 def serviceCall(value):
     try:
@@ -21,18 +20,17 @@ def parse(source):
     return source
 
 def loop():
-    rospy.wait_for_service('move_robot')
-
-    value = 0
+    ropy.wait_for_service('move_robot')
+    most_recent_phase = -100
     while True:
         f = urllib2.urlopen(brent_site)
         page_source = f.read()
 
         value = int(parse(page_source))
         if most_recent_phase != value:
+            print("detects " + str(value))
             most_recent_phase = value
-
             serviceCall(value)
-        time.sleep(1000)
+        time.sleep(0.5)
 
 loop()
