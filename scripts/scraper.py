@@ -24,14 +24,15 @@ def loop():
     rospy.wait_for_service('move_robot')
 
     value = 0
-    while most_recent_phase !=  value:
+    while True:
         f = urllib2.urlopen(brent_site)
         page_source = f.read()
 
         value = int(parse(page_source))
-        most_recent_phase = value
+        if most_recent_phase != value:
+            most_recent_phase = value
 
-        serviceCall(value)
+            serviceCall(value)
         time.sleep(1000)
 
 loop()
